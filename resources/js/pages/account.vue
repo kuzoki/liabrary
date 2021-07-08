@@ -156,8 +156,7 @@
               &times;
             </div>
             <h3 class="popup-title mb-5">
-              <strong>Book-</strong> {{ edit_name }}--{{ editIndex }} --
-              {{ editId }}
+              <strong>Book :</strong> {{ edit_name }}
             </h3>
             <form
               class="add-book-form"
@@ -395,7 +394,7 @@ export default {
         .delete("api/book/delete/" + this.bookTodelet)
         .then((res) => {
           //console.log(res);
-          alert("Item was deleted");
+          alert("Item Was Deleted");
         })
         .catch((err) => {
           console.log(err);

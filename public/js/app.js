@@ -2234,7 +2234,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2396,7 +2395,7 @@ __webpack_require__.r(__webpack_exports__);
       this.fillterRead();
       axios__WEBPACK_IMPORTED_MODULE_0___default().delete("api/book/delete/" + this.bookTodelet).then(function (res) {
         //console.log(res);
-        alert("Item was deleted");
+        alert("Item Was Deleted");
       })["catch"](function (err) {
         console.log(err);
       });
@@ -39824,16 +39823,8 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("h3", { staticClass: "popup-title mb-5" }, [
-                  _c("strong", [_vm._v("Book-")]),
-                  _vm._v(
-                    " " +
-                      _vm._s(_vm.edit_name) +
-                      "--" +
-                      _vm._s(_vm.editIndex) +
-                      " --\n            " +
-                      _vm._s(_vm.editId) +
-                      "\n          "
-                  )
+                  _c("strong", [_vm._v("Book :")]),
+                  _vm._v(" " + _vm._s(_vm.edit_name) + "\n          ")
                 ]),
                 _vm._v(" "),
                 _c(
