@@ -395,7 +395,7 @@ export default {
         .delete("api/book/delete/" + this.bookTodelet)
         .then((res) => {
           //console.log(res);
-          alert("item was deleted");
+          alert("Item was deleted");
         })
         .catch((err) => {
           console.log(err);

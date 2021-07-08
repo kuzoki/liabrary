@@ -2396,7 +2396,7 @@ __webpack_require__.r(__webpack_exports__);
       this.fillterRead();
       axios__WEBPACK_IMPORTED_MODULE_0___default().delete("api/book/delete/" + this.bookTodelet).then(function (res) {
         //console.log(res);
-        alert("item was deleted");
+        alert("Item was deleted");
       })["catch"](function (err) {
         console.log(err);
       });
