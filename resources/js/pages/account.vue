@@ -156,9 +156,14 @@
               &times;
             </div>
             <h3 class="popup-title mb-5">
-              <strong>Book-</strong> {{ edit_name }}
+              <strong>Book-</strong> {{ edit_name }}--{{ editIndex }} --
+              {{ allBooks[editIndex].book_name }}
             </h3>
-            <form class="add-book-form" id="add-book-form">
+            <form
+              class="add-book-form"
+              id="add-book-form"
+              @submit.prevent="editBook(editIndex)"
+            >
               <input
                 type="text"
                 id="title"
@@ -215,6 +220,7 @@ export default {
         unique_delete_id: null,
       },
 
+      // Array That Always Hold Info
       allBooks: [],
 
       // Pop Up Dynamic Data
@@ -325,13 +331,30 @@ export default {
     },
     // Edit Book
     editPass(el, index) {
-      console.log(el.book_read);
-      //console.log(index);
+      //pass Index Delet
+
+      this.editIndex = index;
+
       this.showEditPop = !this.showEditPop;
+
+      // pass alredy exist data to form
+
       this.edit_name = el.book_name;
       this.edit_author = el.book_author;
       this.edit_page_number = el.book_page_number;
       this.edit_read = el.book_read;
+    },
+
+    editBook(index) {
+      //assing new data for vue so we will not refresh
+      this.allBooks[index].book_name = this.edit_name;
+      this.allBooks[index].book_author = this.edit_author;
+      this.allBooks[index].book_page_number = this.edit_page_number;
+      this.allBooks[index].book_read = this.edit_read;
+      // close popup
+      this.showEditPop = !this.showEditPop;
+
+      this.fillterRead();
     },
     // ****** delete Books
 

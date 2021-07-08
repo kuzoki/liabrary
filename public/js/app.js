@@ -2230,6 +2230,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2242,6 +2247,7 @@ __webpack_require__.r(__webpack_exports__);
         book_read: null,
         unique_delete_id: null
       },
+      // Array That Always Hold Info
       allBooks: [],
       // Pop Up Dynamic Data
       showCinfirmationDelet: false,
@@ -2342,13 +2348,24 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Edit Book
     editPass: function editPass(el, index) {
-      console.log(el.book_read); //console.log(index);
+      //pass Index Delet
+      this.editIndex = index;
+      this.showEditPop = !this.showEditPop; // pass alredy exist data to form
 
-      this.showEditPop = !this.showEditPop;
       this.edit_name = el.book_name;
       this.edit_author = el.book_author;
       this.edit_page_number = el.book_page_number;
       this.edit_read = el.book_read;
+    },
+    editBook: function editBook(index) {
+      //assing new data for vue so we will not refresh
+      this.allBooks[index].book_name = this.edit_name;
+      this.allBooks[index].book_author = this.edit_author;
+      this.allBooks[index].book_page_number = this.edit_page_number;
+      this.allBooks[index].book_read = this.edit_read; // close popup
+
+      this.showEditPop = !this.showEditPop;
+      this.fillterRead();
     },
     // ****** delete Books
     pass: function pass(e, t, d) {
@@ -39792,14 +39809,28 @@ var render = function() {
                 _vm._v(" "),
                 _c("h3", { staticClass: "popup-title mb-5" }, [
                   _c("strong", [_vm._v("Book-")]),
-                  _vm._v(" " + _vm._s(_vm.edit_name) + "\n          ")
+                  _vm._v(
+                    " " +
+                      _vm._s(_vm.edit_name) +
+                      "--" +
+                      _vm._s(_vm.editIndex) +
+                      " --\n            " +
+                      _vm._s(_vm.allBooks[_vm.editIndex].book_name) +
+                      "\n          "
+                  )
                 ]),
                 _vm._v(" "),
                 _c(
                   "form",
                   {
                     staticClass: "add-book-form",
-                    attrs: { id: "add-book-form" }
+                    attrs: { id: "add-book-form" },
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.editBook(_vm.editIndex)
+                      }
+                    }
                   },
                   [
                     _c("input", {

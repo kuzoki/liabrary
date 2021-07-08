@@ -41,5 +41,6 @@ Route::prefix('/book')->group( function (){
     Route::post('/store', [BookController::class , 'store']);
     Route::get('/show/{id_user}', [BookController::class , 'show']);
     Route::delete('/delete/{id}',[BookController::class, 'destroy']);
+    Route::delete('/update/{id}',[BookController::class, 'update']);
   
 });
