@@ -119,7 +119,7 @@
                 <button
                   class="btn btn-edit"
                   id="btn-edit"
-                  @click="editPass(item, index)"
+                  @click="editPass(item, index, item.id)"
                 >
                   Edit
                 </button>
@@ -157,12 +157,12 @@
             </div>
             <h3 class="popup-title mb-5">
               <strong>Book-</strong> {{ edit_name }}--{{ editIndex }} --
-              {{ allBooks[editIndex].book_name }}
+              {{ editId }}
             </h3>
             <form
               class="add-book-form"
               id="add-book-form"
-              @submit.prevent="editBook(editIndex)"
+              @submit.prevent="editBook(editIndex, editId)"
             >
               <input
                 type="text"
@@ -235,6 +235,7 @@ export default {
       // Edit Show Block
       showEditPop: false,
       editIndex: null,
+      editId: null,
       // Edit Popup Used Data
       edit_name: "",
       edit_author: "",
@@ -330,11 +331,13 @@ export default {
       this.booksVue.book_read = null;
     },
     // Edit Book
-    editPass(el, index) {
+    editPass(el, index, id) {
       //pass Index Delet
 
       this.editIndex = index;
+      this.editId = id;
 
+      // show pop up
       this.showEditPop = !this.showEditPop;
 
       // pass alredy exist data to form
@@ -345,16 +348,35 @@ export default {
       this.edit_read = el.book_read;
     },
 
-    editBook(index) {
+    editBook(index, id) {
       //assing new data for vue so we will not refresh
+
       this.allBooks[index].book_name = this.edit_name;
       this.allBooks[index].book_author = this.edit_author;
       this.allBooks[index].book_page_number = this.edit_page_number;
       this.allBooks[index].book_read = this.edit_read;
-      // close popup
-      this.showEditPop = !this.showEditPop;
+
+      let data = {
+        book_name: this.edit_name,
+        book_author: this.edit_author,
+        book_page_number: this.edit_page_number,
+        book_read: this.edit_read,
+      };
+
+      axios
+        .put("/api/book/update/" + id, data)
+        .then((res) => {
+          if (res.status == 200) {
+            console.log("Updated");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       this.fillterRead();
+      // close popup
+      this.showEditPop = !this.showEditPop;
     },
     // ****** delete Books
 

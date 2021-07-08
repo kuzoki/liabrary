@@ -89,6 +89,17 @@ class BookController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $book = Book::find($id);
+
+        $book->book_name = $request->book_name;
+        $book->book_page_number = $request->book_page_number;
+        $book->book_author = $request->book_author;
+        $book->book_read = $request->book_read;
+
+        $book->save();
+
+        return $book;
+        
     }
 
     /**

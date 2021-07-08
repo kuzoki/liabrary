@@ -2259,6 +2259,7 @@ __webpack_require__.r(__webpack_exports__);
       // Edit Show Block
       showEditPop: false,
       editIndex: null,
+      editId: null,
       // Edit Popup Used Data
       edit_name: "",
       edit_author: "",
@@ -2347,9 +2348,11 @@ __webpack_require__.r(__webpack_exports__);
       this.booksVue.book_read = null;
     },
     // Edit Book
-    editPass: function editPass(el, index) {
+    editPass: function editPass(el, index, id) {
       //pass Index Delet
       this.editIndex = index;
+      this.editId = id; // show pop up
+
       this.showEditPop = !this.showEditPop; // pass alredy exist data to form
 
       this.edit_name = el.book_name;
@@ -2357,15 +2360,28 @@ __webpack_require__.r(__webpack_exports__);
       this.edit_page_number = el.book_page_number;
       this.edit_read = el.book_read;
     },
-    editBook: function editBook(index) {
+    editBook: function editBook(index, id) {
       //assing new data for vue so we will not refresh
       this.allBooks[index].book_name = this.edit_name;
       this.allBooks[index].book_author = this.edit_author;
       this.allBooks[index].book_page_number = this.edit_page_number;
-      this.allBooks[index].book_read = this.edit_read; // close popup
+      this.allBooks[index].book_read = this.edit_read;
+      var data = {
+        book_name: this.edit_name,
+        book_author: this.edit_author,
+        book_page_number: this.edit_page_number,
+        book_read: this.edit_read
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().put("/api/book/update/" + id, data).then(function (res) {
+        if (res.status == 200) {
+          console.log("Updated");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+      });
+      this.fillterRead(); // close popup
 
       this.showEditPop = !this.showEditPop;
-      this.fillterRead();
     },
     // ****** delete Books
     pass: function pass(e, t, d) {
@@ -39725,7 +39741,7 @@ var render = function() {
                         attrs: { id: "btn-edit" },
                         on: {
                           click: function($event) {
-                            return _vm.editPass(item, index)
+                            return _vm.editPass(item, index, item.id)
                           }
                         }
                       },
@@ -39815,7 +39831,7 @@ var render = function() {
                       "--" +
                       _vm._s(_vm.editIndex) +
                       " --\n            " +
-                      _vm._s(_vm.allBooks[_vm.editIndex].book_name) +
+                      _vm._s(_vm.editId) +
                       "\n          "
                   )
                 ]),
@@ -39828,7 +39844,7 @@ var render = function() {
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        return _vm.editBook(_vm.editIndex)
+                        return _vm.editBook(_vm.editIndex, _vm.editId)
                       }
                     }
                   },
