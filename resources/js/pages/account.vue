@@ -75,21 +75,44 @@
                 </h4>
               </div>
               <div class="library-log--single">
+                <img src="/uploads/check.svg" alt="books icon" />
+                <h4>
+                  Total Pages Readed :
+                  <span>
+                    {{ totalpageRead }}
+                  </span>
+                </h4>
+              </div>
+              <div class="library-log--single">
                 <img src="/uploads/x.svg" alt="books icon" />
                 <h4>
                   Books not read :
-                  <span>{{ allBooks.length - numberRead }}</span>
+                  <span>{{ allBooks.length - numberRead }} </span>
                 </h4>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-9 p-5 position-relative">
-        <button @click.prevent="logout" class="logout">Logout</button>
 
-        <h1 class="sec-title">My Books</h1>
+      <!-- View Page -->
+      <div class="col-9 p-5 position-relative">
+        <div class="navi">
+          <button @click.prevent="logout" class="logout">Logout</button>
+          <div class="filter-btns">
+            <button class="btn btn-primary" @click.prevent="readNotread(null)">
+              All
+            </button>
+            <button class="btn btn-primary" @click.prevent="readNotread(true)">
+              Readed
+            </button>
+            <button class="btn btn-primary" @click.prevent="readNotread(false)">
+              Not Read
+            </button>
+          </div>
+        </div>
         <div class="book-list">
+          <h1 class="sec-title">My Books</h1>
           <div class="grid row" id="books-list-grid">
             <div
               class="col col-4 col-lg"
@@ -221,11 +244,12 @@ export default {
 
       // Array That Always Hold Info
       allBooks: [],
+      numberRead: 0,
+      totalpageRead: 0,
 
       // Pop Up Dynamic Data
       showCinfirmationDelet: false,
       titletodelet: "",
-      numberRead: 0,
 
       //Deletition data first for vue sconed fo database
       indexDelet: null,
@@ -235,6 +259,7 @@ export default {
       showEditPop: false,
       editIndex: null,
       editId: null,
+
       // Edit Popup Used Data
       edit_name: "",
       edit_author: "",
@@ -255,6 +280,18 @@ export default {
   },
 
   methods: {
+    // Filter Buttons Methods
+    readNotread(state) {
+      if (state !== null) {
+        this.allBooks = this.allBooks.filter((el) => {
+          return el.book_read == state;
+        });
+        this.fillterRead();
+      } else {
+        this.getBooks();
+      }
+    },
+
     // methode To creat calculate the books that are readed
     fillterRead() {
       let newarray = this.allBooks.filter(function (ell) {
@@ -262,6 +299,12 @@ export default {
         return ell.book_read == true;
       });
       this.numberRead = newarray.length;
+
+      this.totalpageRead = 0;
+      for (let i = 0; i < newarray.length; i++) {
+        this.totalpageRead += parseInt(newarray[i].book_page_number);
+        // console.log(typeof newarray[i].book_page_number);
+      }
     },
 
     // Get All Booke By User
@@ -294,9 +337,6 @@ export default {
         user_id: this.user.id,
       };
 
-      //console.log(this.allBooks);
-
-      // this.fillterRead();
       //***  push to data base
       axios
         .post("/api/book/store", newBook)
@@ -316,7 +356,7 @@ export default {
             };
 
             this.allBooks.push(newBookaxios);
-            console.log(this.allBooks);
+            //console.log(this.allBooks);
             this.fillterRead();
           }
         })

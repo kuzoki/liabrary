@@ -2234,6 +2234,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2248,10 +2271,11 @@ __webpack_require__.r(__webpack_exports__);
       },
       // Array That Always Hold Info
       allBooks: [],
+      numberRead: 0,
+      totalpageRead: 0,
       // Pop Up Dynamic Data
       showCinfirmationDelet: false,
       titletodelet: "",
-      numberRead: 0,
       //Deletition data first for vue sconed fo database
       indexDelet: null,
       bookTodelet: null,
@@ -2278,6 +2302,17 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    // Filter Buttons Methods
+    readNotread: function readNotread(state) {
+      if (state !== null) {
+        this.allBooks = this.allBooks.filter(function (el) {
+          return el.book_read == state;
+        });
+        this.fillterRead();
+      } else {
+        this.getBooks();
+      }
+    },
     // methode To creat calculate the books that are readed
     fillterRead: function fillterRead() {
       var newarray = this.allBooks.filter(function (ell) {
@@ -2285,6 +2320,11 @@ __webpack_require__.r(__webpack_exports__);
         return ell.book_read == true;
       });
       this.numberRead = newarray.length;
+      this.totalpageRead = 0;
+
+      for (var i = 0; i < newarray.length; i++) {
+        this.totalpageRead += parseInt(newarray[i].book_page_number); // console.log(typeof newarray[i].book_page_number);
+      }
     },
     // Get All Booke By User
     getBooks: function getBooks() {
@@ -2314,9 +2354,7 @@ __webpack_require__.r(__webpack_exports__);
         user_name: this.user.name,
         user_email: this.user.email,
         user_id: this.user.id
-      }; //console.log(this.allBooks);
-      // this.fillterRead();
-      //***  push to data base
+      }; //***  push to data base
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/book/store", newBook).then(function (res) {
         //console.log(res.data);
@@ -2332,9 +2370,8 @@ __webpack_require__.r(__webpack_exports__);
             id: res.data.id
           };
 
-          _this3.allBooks.push(newBookaxios);
+          _this3.allBooks.push(newBookaxios); //console.log(this.allBooks);
 
-          console.log(_this3.allBooks);
 
           _this3.fillterRead();
         }
@@ -39655,6 +39692,25 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "library-log--single" }, [
                 _c("img", {
+                  attrs: { src: "/uploads/check.svg", alt: "books icon" }
+                }),
+                _vm._v(" "),
+                _c("h4", [
+                  _vm._v(
+                    "\n                Total Pages Readed :\n                "
+                  ),
+                  _c("span", [
+                    _vm._v(
+                      "\n                  " +
+                        _vm._s(_vm.totalpageRead) +
+                        "\n                "
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "library-log--single" }, [
+                _c("img", {
                   attrs: { src: "/uploads/x.svg", alt: "books icon" }
                 }),
                 _vm._v(" "),
@@ -39663,7 +39719,7 @@ var render = function() {
                     "\n                Books not read :\n                "
                   ),
                   _c("span", [
-                    _vm._v(_vm._s(_vm.allBooks.length - _vm.numberRead))
+                    _vm._v(_vm._s(_vm.allBooks.length - _vm.numberRead) + " ")
                   ])
                 ])
               ])
@@ -39673,23 +39729,69 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-9 p-5 position-relative" }, [
-        _c(
-          "button",
-          {
-            staticClass: "logout",
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.logout.apply(null, arguments)
+        _c("div", { staticClass: "navi" }, [
+          _c(
+            "button",
+            {
+              staticClass: "logout",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.logout.apply(null, arguments)
+                }
               }
-            }
-          },
-          [_vm._v("Logout")]
-        ),
-        _vm._v(" "),
-        _c("h1", { staticClass: "sec-title" }, [_vm._v("My Books")]),
+            },
+            [_vm._v("Logout")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "filter-btns" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.readNotread(null)
+                  }
+                }
+              },
+              [_vm._v("\n            All\n          ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.readNotread(true)
+                  }
+                }
+              },
+              [_vm._v("\n            Readed\n          ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.readNotread(false)
+                  }
+                }
+              },
+              [_vm._v("\n            Not Read\n          ")]
+            )
+          ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "book-list" }, [
+          _c("h1", { staticClass: "sec-title" }, [_vm._v("My Books")]),
+          _vm._v(" "),
           _c(
             "div",
             { staticClass: "grid row", attrs: { id: "books-list-grid" } },
