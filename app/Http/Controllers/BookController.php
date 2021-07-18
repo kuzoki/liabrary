@@ -43,7 +43,10 @@ class BookController extends Controller
         $newBook->book_author = $request->book_author;
         $newBook->book_read = $request->book_read;
         $newBook->book_page_number = $request->book_page_number;
-        // $newBook->unique_delete_id = $request->unique_delete_id;
+        $newBook->book_category = $request->book_category;
+        $newBook->book_hours = $request->book_hours;
+        $newBook->book_minutes = $request->book_minutes;
+       
 
 
         $newBook->save();
@@ -95,6 +98,9 @@ class BookController extends Controller
         $book->book_page_number = $request->book_page_number;
         $book->book_author = $request->book_author;
         $book->book_read = $request->book_read;
+        $book->book_category= $request->book_category;
+        $book->book_hours = $request->book_hours;
+        $book->book_minutes = $request->book_minutes;
 
         $book->save();
 

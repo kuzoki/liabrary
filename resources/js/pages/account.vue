@@ -41,6 +41,28 @@
                 v-model="booksVue.book_page_number"
                 required
               />
+              <div class="d-flex flex-row time">
+                <input
+                  type="number"
+                  name="hours"
+                  placeholder="Houres"
+                  v-model="booksVue.book_hours"
+                />
+                <input
+                  type="number"
+                  name="minuts"
+                  placeholder="Minutes"
+                  max="60"
+                  min="0"
+                  v-model="booksVue.book_minutes"
+                />
+                <input
+                  type="text"
+                  name="Category"
+                  placeholder="Category"
+                  v-model="booksVue.book_category"
+                />
+              </div>
               <select
                 name="read"
                 id="read"
@@ -59,6 +81,8 @@
               </button>
             </form>
           </div>
+
+          <!-- Data Analytics -->
           <div class="sidebar-widget widget-library-log mt-4">
             <h2 class="sec-title">Library log</h2>
             <div class="library-log">
@@ -74,6 +98,7 @@
                   Books read : <span>{{ numberRead }}</span>
                 </h4>
               </div>
+
               <div class="library-log--single">
                 <img src="/uploads/check.svg" alt="books icon" />
                 <h4>
@@ -92,12 +117,17 @@
               </div>
             </div>
           </div>
+          <div class="sidebar-widget widget-library-log mt-4">
+            <router-link to="/account/analytic" class="btn btn-primary"
+              >View My Stats</router-link
+            >
+          </div>
         </div>
       </div>
 
       <!-- View Page -->
       <div class="col-9 p-5 position-relative">
-        <div class="navi">
+        <div class="navi mb-5">
           <button @click.prevent="logout" class="logout">Logout</button>
           <div class="filter-btns">
             <button class="btn btn-primary" @click.prevent="readNotread(null)">
@@ -111,6 +141,7 @@
             </button>
           </div>
         </div>
+
         <div class="book-list">
           <h1 class="sec-title">My Books</h1>
           <div class="grid row" id="books-list-grid">
@@ -121,13 +152,19 @@
             >
               <div class="book-card">
                 <h4 class="title">{{ item.book_name }}</h4>
-                <!-- <p>
-                  To do After
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Repellat ullam numquam animi aliquid harum error, illum
-                  laudantium id? Deserunt enim officia illum asperiores
+                <!-- <p class="pages my-4" style="color: #313a46">
+                  To do After Lorem ipsum dolor sit, amet consectetur
+                  adipisicing elit. Repellat ullam numquam animi aliquid harum
+                  error, illum laudantium id? Deserunt enim officia illum
+                  asperiores
                 </p> -->
                 <p class="author">Author : {{ item.book_author }}</p>
+                <p class="author">Category : {{ item.book_category }}</p>
+                <p class="author">
+                  Time Of read : {{ item.book_hours }}h /
+                  {{ item.book_minutes }}minutes
+                </p>
+
                 <p class="pages">
                   Number Of Pages : {{ item.book_page_number }}
                 </p>
@@ -210,6 +247,28 @@
                 required
                 v-model="edit_page_number"
               />
+              <div class="d-flex flex-row time">
+                <input
+                  type="number"
+                  name="hours"
+                  placeholder="Houres"
+                  v-model="edit_hours"
+                />
+                <input
+                  type="number"
+                  name="minuts"
+                  placeholder="Minutes"
+                  max="60"
+                  min="0"
+                  v-model="edit_minutes"
+                />
+                <input
+                  type="text"
+                  name="Category"
+                  placeholder="Category"
+                  v-model="edit_category"
+                />
+              </div>
               <select name="read" id="read" v-model="edit_read" required>
                 <option :value="null" disabled selected>
                   Have you read it?
@@ -234,12 +293,16 @@ export default {
   data() {
     return {
       user: null,
+
       booksVue: {
         book_name: "",
         book_author: "",
         book_page_number: null,
         book_read: null,
         unique_delete_id: null,
+        book_hours: null,
+        book_minutes: null,
+        book_category: "",
       },
 
       // Array That Always Hold Info
@@ -265,6 +328,9 @@ export default {
       edit_author: "",
       edit_page_number: null,
       edit_read: null,
+      edit_hours: null,
+      edit_minutes: null,
+      edit_category: "",
     };
   },
   mounted() {
@@ -332,6 +398,9 @@ export default {
         book_author: this.booksVue.book_author,
         book_page_number: this.booksVue.book_page_number,
         book_read: this.booksVue.book_read,
+        book_hours: this.booksVue.book_hours,
+        book_minutes: this.booksVue.book_minutes,
+        book_category: this.booksVue.book_category,
         user_name: this.user.name,
         user_email: this.user.email,
         user_id: this.user.id,
@@ -349,6 +418,9 @@ export default {
               book_author: res.data.book_author,
               book_page_number: res.data.book_page_number,
               book_read: res.data.book_read,
+              book_category: res.data.book_category,
+              book_hours: res.data.book_hours,
+              book_minutes: res.data.book_minutes,
               user_name: res.data.user_name,
               user_email: res.data.email,
               user_id: res.data.user_id,
@@ -371,7 +443,7 @@ export default {
     },
     // Edit Book
     editPass(el, index, id) {
-      //pass Index Delet
+      //pass Index Delet for vue and id for mysql
 
       this.editIndex = index;
       this.editId = id;
@@ -379,12 +451,15 @@ export default {
       // show pop up
       this.showEditPop = !this.showEditPop;
 
-      // pass alredy exist data to form
+      // pass alredy exist data to from card to edits popup
 
       this.edit_name = el.book_name;
       this.edit_author = el.book_author;
       this.edit_page_number = el.book_page_number;
       this.edit_read = el.book_read;
+      this.edit_hours = el.book_hours;
+      this.edit_minutes = el.book_minutes;
+      this.edit_category = el.book_category;
     },
 
     editBook(index, id) {
@@ -394,12 +469,18 @@ export default {
       this.allBooks[index].book_author = this.edit_author;
       this.allBooks[index].book_page_number = this.edit_page_number;
       this.allBooks[index].book_read = this.edit_read;
+      this.allBooks[index].book_hours = this.edit_hours;
+      this.allBooks[index].book_minutes = this.edit_minutes;
+      this.allBooks[index].book_category = this.edit_category;
 
       let data = {
         book_name: this.edit_name,
         book_author: this.edit_author,
         book_page_number: this.edit_page_number,
         book_read: this.edit_read,
+        book_hours: this.edit_hours,
+        book_minutes: this.edit_minutes,
+        book_category: this.edit_category,
       };
 
       axios
@@ -462,6 +543,13 @@ export default {
 
 
 <style scoped>
+.time input {
+  margin: 0 5px 20px 0;
+  width: 33.33%;
+}
+.time input:last-of-type {
+  margin-right: 0;
+}
 .close {
   position: absolute;
   top: 5px;

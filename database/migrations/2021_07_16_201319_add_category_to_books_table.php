@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUniqueToBooksTable extends Migration
+class AddCategoryToBooksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,10 @@ class AddUniqueToBooksTable extends Migration
     {
         Schema::table('books', function (Blueprint $table) {
             //
-            $table->integer('unique_delete_id')->unique();
+            $table->string('category')->nullable();
+            $table->integer('hours')->nullable();
+            $table->integer('minutes')->nullable();
+           
         });
     }
 
