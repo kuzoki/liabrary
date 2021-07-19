@@ -1,39 +1,94 @@
 <template>
-  <div class="p-5">
+  <div class="p-5 bg-pop">
     <div class="container-fluid">
-      <h1 class="display-3 mb-5">Analityc</h1>
-      <div class="row">
-        <!-- Readed Book Data -->
-        <div class="col-6">
-          <h3 class="display-6">The readed Book Data Analityc:</h3>
-          <ul>
-            <li>Number of books readed : {{ readBooks.length }}</li>
-            <li>Number of Pages readed : {{ numberPageread }}</li>
-            <li>
-              Number of books Hours : {{ totalTimemin }} Minutes =
-              {{ (totalTimemin - (totalTimemin % 60)) / 60 }} Hours /
-              {{ totalTimemin % 60 }} Minutes
-            </li>
-            <li>
-              You spend {{ ((totalTimemin * 100) / 525600).toFixed(2) }} % of
-              the year reading Books
-            </li>
-            <li>
-              Category <br />
-              <span v-for="(item, index) in CategoryData" :key="index">
-                {{ item.category_name }} : {{ item.number }} Books
+      <div class="col-6 m-auto warp p-5 position-relative">
+        <div class="close" @click="close">X</div>
+        <h1 class="display-3 mb-5">Analityc</h1>
+        <h3 class="display-6">The readed Book Data Analityc:</h3>
+
+        <div class="row text-center">
+          <div class="d-flex flex-column align-items-center col-3">
+            <img src="/uploads/book.svg" alt="" />
+            <p>
+              Number of books readed :<br />
+              <strong>{{ readBooks.length }}</strong>
+            </p>
+          </div>
+          <div class="d-flex flex-column align-items-center col-3">
+            <img src="/uploads/pages.svg" alt="" />
+            <p>
+              Number of Pages readed : <strong>{{ numberPageread }}</strong>
+            </p>
+          </div>
+          <div class="d-flex flex-column align-items-center col-3">
+            <img src="/uploads/clock.svg" alt="" />
+            <p>
+              Reading time in minuts : <br />
+              <strong> {{ totalTimemin }} Minutes </strong>
+            </p>
+          </div>
+          <div class="d-flex flex-column align-items-center col-3">
+            <img src="/uploads/clock.svg" alt="" />
+            <p>
+              Reading time in hours : <br />
+              <strong>
+                {{ (totalTimemin - (totalTimemin % 60)) / 60 }} Hours /
+                {{ totalTimemin % 60 }} Minutes
+              </strong>
+            </p>
+          </div>
+          <div class="d-flex flex-column align-items-center col-3 mt-5">
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart orange">
+                <path
+                  class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path
+                  class="circle"
+                  :stroke-dasharray="calcpercentage()"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentagetext">
+                  {{ ((totalTimemin * 100) / 525600).toFixed(2) }} %
+                </text>
+              </svg>
+            </div>
+            You have spended over
+            <strong>
+              {{ ((totalTimemin * 100) / 525600).toFixed(2) }} % of a year in
+              reading Books
+            </strong>
+          </div>
+          <div class="text-left col-9 d-flex flex-column cate mt-5">
+            All The Categorys You Have readed :<strong
+              >You have {{ CategoryData.length }} type of categorys
+            </strong>
+            <br />
+            <span
+              v-for="(item, index) in CategoryData"
+              :key="index"
+              class="row"
+            >
+              <div class="col-3">
+                <p>{{ item.category_name }} : {{ item.number }} Book(s)</p>
+              </div>
+              <div class="col-9">
                 <div class="block">
                   <div
                     class="w-c"
                     :style="widthBlock(item.number, readBooks.length)"
                   ></div>
                 </div>
-                <br />
-              </span>
-            </li>
-          </ul>
+              </div>
+              <br />
+            </span>
+          </div>
         </div>
-        <div class="col-6"></div>
       </div>
     </div>
   </div>
@@ -63,9 +118,14 @@ export default {
         console.log(error);
       });
     this.widthBlock();
+    this.calcpercentage();
   },
 
   methods: {
+    calcpercentage() {
+      let percen = ((this.totalTimemin * 100) / 525600).toFixed(2);
+      return percen + ", 100";
+    },
     widthBlock(x, a) {
       let per = (x * 100) / a;
       let resualt = "width:" + per + "%";
@@ -117,23 +177,104 @@ export default {
         this.CategoryData.push(datacat);
       }
     },
+    // Close The Button
+    close() {
+      this.$emit("closeAnalytice");
+    },
   },
 };
 </script>
 <style scoped>
+.bg-pop {
+  background: rgba(0, 0, 0, 0.8);
+  height: 100vh;
+  width: 100%;
+  /* overflow-y: scroll; */
+  position: absolute;
+  top: 0;
+  z-index: 9;
+}
+.cate {
+  text-align: left !important;
+}
+.flex-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.single-chart {
+  width: 90%;
+  justify-content: space-around;
+}
+
+.circular-chart {
+  display: block;
+  margin: 10px auto;
+  max-width: 80%;
+  max-height: 250px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgb(226, 226, 226);
+  stroke-width: 3.8;
+}
+.circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+.circular-chart.orange .circle {
+  stroke: #ff9f00;
+}
+
+.circular-chart.green .circle {
+  stroke: #4cc790;
+}
+
+.circular-chart.blue .circle {
+  stroke: #3c9ee5;
+}
+
+.percentagetext {
+  fill: #666;
+  font-family: sans-serif;
+  font-size: 0.3em;
+  text-anchor: middle;
+}
+img {
+  width: 50px;
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.warp {
+  background: #eef2f7;
+}
+
 span {
   text-transform: capitalize;
 }
 .block {
   width: 100%;
-  height: 10px;
-  background: lightblue;
-  border-radius: 20px;
+  height: 20px;
+  background: rgb(228, 228, 228);
 }
 .w-c {
   width: 50%;
-  height: 10px;
-  background: red;
-  border-radius: 0 20px 20px 0;
+  height: 20px;
+  background: rgb(5, 191, 82);
 }
 </style>

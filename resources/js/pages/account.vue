@@ -118,9 +118,9 @@
             </div>
           </div>
           <div class="sidebar-widget widget-library-log mt-4">
-            <router-link to="/account/analytic" class="btn btn-primary"
-              >View My Stats</router-link
-            >
+            <button class="btn btn-primary" @click="showAnlytic = !showAnlytic">
+              View My Stats
+            </button>
           </div>
         </div>
       </div>
@@ -285,11 +285,18 @@
         </div>
       </div>
     </div>
+    <!-- Anaytic Page -->
+    <div v-if="showAnlytic">
+      <analytic @closeAnalytice="showAnlytic = !showAnlytic"></analytic>
+    </div>
   </div>
 </template>
 <script>
 import axios from "axios";
+import analytic from "./analytic";
+
 export default {
+  components: { analytic },
   data() {
     return {
       user: null,
@@ -304,7 +311,8 @@ export default {
         book_minutes: null,
         book_category: "",
       },
-
+      // show Anlytic
+      showAnlytic: false,
       // Array That Always Hold Info
       allBooks: [],
       numberRead: 0,
@@ -534,14 +542,6 @@ export default {
 </script>
 
 
-
-
-
-
-
-
-
-
 <style scoped>
 .time input {
   margin: 0 5px 20px 0;
@@ -758,11 +758,12 @@ button[type="submit"],
 .popup .popup-content {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 40%;
   transform: translate(-50%, -50%);
   background-color: #fff;
   padding: 30px;
   z-index: 2;
+  width: 60%;
 }
 
 .popup .popup-close {

@@ -1,8 +1,7 @@
 
 import home from './pages/home';
 import account from './pages/account';
-import analytic from './pages/analytic';
-import books from './pages/books';
+
 import axios from 'axios';
 // import student from './components/student';
 
@@ -18,31 +17,7 @@ export default ({
                 }).catch(()=>{
                     return next('/')
                 })
-            }
-            
-
-        },
-        { path: '/account/analytic', component: analytic,
-            beforeEnter: (to, from, next) =>{
-                axios.get('/api/authenticated').then(()=>{
-                    next()
-                }).catch(()=>{
-                    return next('/')
-                })
-            }
-            
-
-        },
-
-        {
-            path: '/account/books',component: books,
-            beforeEnter: (to, from, next) =>{
-                axios.get('/api/authenticated').then(()=>{
-                    next()
-                }).catch(()=>{
-                    return next('/')
-                })
-            }
+            }   
         },
         { path: "*", component: home,
             beforeEnter (to) {
